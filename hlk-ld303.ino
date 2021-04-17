@@ -1,4 +1,7 @@
 #include "Arduino.h"
+#include "ld303-protocol.h"
+
+static LD303Protocol protocol;
 
 void setup(void)
 {

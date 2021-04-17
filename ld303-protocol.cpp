@@ -1,7 +1,7 @@
-#include "protocol.h"
+#include "ld303-protocol.h"
 
 
-Protocol::Protocol(void)
+LD303Protocol::LD303Protocol(void)
 {
     _state = STATE_HEADER_55;
     _len = 0;
@@ -15,7 +15,7 @@ Protocol::Protocol(void)
 // change query mode: BAAB 00 F6 0007 00 55BB = send cmd F6 with parameter 0007
 // -> reports data continuously?
 
-size_t Protocol::build_query(uint8_t *buf, uint8_t param)
+size_t LD303Protocol::build_query(uint8_t *buf, uint8_t param)
 {
     int idx = 0;
     uint8_t sum = 0;
@@ -32,7 +32,7 @@ size_t Protocol::build_query(uint8_t *buf, uint8_t param)
     return idx;
 }
 
-size_t Protocol::build_command(uint8_t *buf, uint8_t cmd, uint16_t data)
+size_t LD303Protocol::build_command(uint8_t *buf, uint8_t cmd, uint16_t data)
 {
     int idx = 0;
     buf[idx++] = 0xBA;  // header
@@ -52,7 +52,7 @@ size_t Protocol::build_command(uint8_t *buf, uint8_t cmd, uint16_t data)
 // 55       A5      0A      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
 // header           len     adress  distance        rsvd    state   signal strength micro   closed  check
 
-bool Protocol::process_rx(uint8_t c, uint8_t cmd)
+bool LD303Protocol::process_rx(uint8_t c, uint8_t cmd)
 {
     switch (_state) {
     case STATE_HEADER_55:

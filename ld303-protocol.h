@@ -34,7 +34,7 @@ typedef enum {
     STATE_CHECK
 } state_t;
 
-class Protocol {
+class LD303Protocol {
 
 private:
     state_t _state;
@@ -44,7 +44,7 @@ private:
     uint8_t _idx;
 
 public:
-    Protocol();
+    LD303Protocol();
 
     // builds a parameter setting command
     size_t build_command(uint8_t *buf, uint8_t cmd, uint16_t data);
