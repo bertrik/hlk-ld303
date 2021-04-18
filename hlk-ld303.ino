@@ -65,10 +65,47 @@ static int do_query(int argc, char *argv[])
     return CMD_OK;
 }
 
+static int do_mode(int argc, char *argv[])
+{
+    uint8_t buf[32];
+
+    if (argc < 2) {
+        return CMD_ARG;
+    }
+    uint16_t mode = atoi(argv[1]);
+    printf("Setting mode %d\n", mode);
+    size_t len = protocol.build_command(buf, CMD_PROTOCOL_TYPE, mode);
+    printhex("- data: ", buf, len);
+    radar.write(buf, len);
+
+    return CMD_OK;
+}
+
+static int do_baud(int argc, char *argv[])
+{
+    uint8_t buf[32];
+
+    if (argc < 2) {
+        return CMD_ARG;
+    }
+    int baud = atoi(argv[1]);
+    printf("Setting baud %d\n", baud);
+    size_t len = protocol.build_command(buf, CMD_BAUD_RATE, baud / 100);
+    printhex("- data: ", buf, len);
+    radar.write(buf, len);
+
+    delay(100);
+    radar.begin(baud);
+
+    return CMD_OK;
+}
+
 const cmd_t commands[] = {
     { "help", do_help, "Show help" },
     { "cmd", do_cmd, "<cmd> <param> Set a parameter" },
     { "q", do_query, "[param] Query the radar" },
+    { "mode", do_mode, "<0|1|6|7> Set protocol mode" },
+    { "baud", do_baud, "<baudrate> Set baud rate" },
     { NULL, NULL, NULL }
 };
 
