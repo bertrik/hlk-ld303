@@ -53,7 +53,10 @@ public:
     size_t build_query(uint8_t *buf, uint8_t param);
 
     // processes received data, returns true if measurement data was found
-    bool process_rx(uint8_t c, uint8_t cmd);
+    bool process_rx(uint8_t c);
+
+    // call this when process_rx returns true, copies received data into buffer, returns length
+    size_t get_data(uint8_t *data);
 
 };
 

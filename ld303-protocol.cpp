@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "ld303-protocol.h"
 
 
@@ -18,14 +20,14 @@ LD303Protocol::LD303Protocol(void)
 size_t LD303Protocol::build_query(uint8_t *buf, uint8_t param)
 {
     int idx = 0;
-    uint8_t sum = 0;
-
     buf[idx++] = 0x55;  // header
     buf[idx++] = 0x5A;
     buf[idx++] = 0x02;  // length
-    buf[idx++] = param;  // query parameter
+    buf[idx++] = param; // query parameter
+
+    uint8_t sum = 0;
     for (int i = 0; i < idx; i++) {
-        sum += buf[idx];
+        sum += buf[i];
     }
     buf[idx++] = sum;
 
@@ -52,7 +54,7 @@ size_t LD303Protocol::build_command(uint8_t *buf, uint8_t cmd, uint16_t data)
 // 55       A5      0A      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
 // header           len     adress  distance        rsvd    state   signal strength micro   closed  check
 
-bool LD303Protocol::process_rx(uint8_t c, uint8_t cmd)
+bool LD303Protocol::process_rx(uint8_t c)
 {
     switch (_state) {
     case STATE_HEADER_55:
@@ -96,6 +98,12 @@ bool LD303Protocol::process_rx(uint8_t c, uint8_t cmd)
         break;
     }
     return false;
+}
+
+size_t LD303Protocol::get_data(uint8_t *data)
+{
+    memcpy(data, _buf, _len);
+    return _len;
 }
 
 
