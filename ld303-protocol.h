@@ -7,17 +7,22 @@ typedef enum {
     CMD_OPERATING_MODE = 0xB1,      // 0 = sensitive, 1 = stable
     CMD_FITTING_COEFFICIENT = 0xB2, // unit 0.001
     CMD_OFFSET_CORRECTION = 0xB3,   // unit 0.01 cm
+    CMD_DELAY_TIME = 0xD1,          // 
     CMD_CLOSE_TREATMENT = 0xD2,     // 0 = keep last measured distance, 1 = clear distance result
+    CMD_MEASUREMENT = 0xD3,         // read measurement?
     CMD_BAUD_RATE = 0xD4,           // unit 100 bps, e.g. 96 for 9600 bps
     CMD_TRIGGER_THRESHOLD = 0xD5,   // unit 'k'
     CMD_OUTPUT_TARGET = 0xD9,       // 0 = nearest, 1 = maximum goal
     CMD_SIGNAL_INTERVAL = 0xDA,     // range 5-20, unit 40 ms
     CMD_RESET = 0xDE,               // reset, 0
+    CMD_MIN_DETECTION_DIST = 0xE0,  // unit 'cm'
+    CMD_SENSITIVITY = 0xE1,         // unit 'k', 60-2000 (default 300)
+    CMD_MAX_DETECTION_DIST = 0xE5,  // unit 'cm'
     CMD_DATA_RESPONSE_TIME = 0xE6,  // range 0-20, unit 40 ms
     CMD_EXTREME_VALUE_STATS = 0xE7, // unit 'times'
     CMD_EXTREME_FILTER_TIMES = 0xE8,// unit 'times'
     CMD_NUMBER_OF_SWIPES = 0xE9,    // unit 'times'
-    CMD_PROTOCOL_TYPE = 0xF6,       // 0 = ASCII, 1 = hex protocol 1, 6 = standard protocol
+    CMD_PROTOCOL_TYPE = 0xF6,       // 0 = ASCII, 1 = hex protocol 1, 6 = standard protocol (query), 7 = automatic
     CMD_PROPORTION_STATISTIC = 0xF9,// 0-100
     CMD_INVALID_DISTANCE = 0xFA,    // unit 'cm'
     CMD_PERCENTAGE = 0xFB,          // unit '%'
