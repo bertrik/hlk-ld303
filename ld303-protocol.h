@@ -7,10 +7,10 @@ typedef enum {
     CMD_OPERATING_MODE = 0xB1,      // 0 = sensitive, 1 = stable
     CMD_FITTING_COEFFICIENT = 0xB2, // unit 0.001
     CMD_OFFSET_CORRECTION = 0xB3,   // unit 0.01 cm
-    CMD_DELAY_TIME = 0xD1,          // 
+    CMD_DELAY_TIME = 0xD1,          // how long the 'presence' bit remain high after detection (ms)
     CMD_CLOSE_TREATMENT = 0xD2,     // 0 = keep last measured distance, 1 = clear distance result
     CMD_MEASUREMENT = 0xD3,         // read measurement?
-    CMD_BAUD_RATE = 0xD4,           // unit 100 bps, e.g. 96 for 9600 bps
+    CMD_BAUD_RATE = 0xD4,           // unit 100 bps, e.g. 96 for 9600 bps, activated on next power-up
     CMD_TRIGGER_THRESHOLD = 0xD5,   // unit 'k'
     CMD_OUTPUT_TARGET = 0xD9,       // 0 = nearest, 1 = maximum goal
     CMD_SIGNAL_INTERVAL = 0xDA,     // range 5-20, unit 40 ms
