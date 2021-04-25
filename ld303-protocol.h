@@ -52,10 +52,10 @@ public:
     LD303Protocol();
 
     // builds a parameter setting command
-    size_t build_command(uint8_t *buf, uint8_t cmd, uint16_t data);
+    size_t build_command(uint8_t *buf, uint8_t cmd, uint16_t param);
 
     // queries the module for measurement data (param usually 0xD3)
-    size_t build_query(uint8_t *buf, uint8_t *data, size_t len);
+    size_t build_query(uint8_t *buf, const uint8_t *data, size_t len);
 
     // processes received data, returns true if measurement data was found
     bool process_rx(uint8_t c);
