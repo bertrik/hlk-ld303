@@ -18,7 +18,7 @@ typedef enum {
     CMD_MIN_DETECTION_DIST = 0xE0,  // unit 'cm'
     CMD_SENSITIVITY = 0xE1,         // unit 'k', 60-2000 (default 300)
     CMD_MAX_DETECTION_DIST = 0xE5,  // unit 'cm'
-    CMD_DATA_RESPONSE_TIME = 0xE6,  // range 0-20, unit 40 ms
+    CMD_REPORT_INTERVAL = 0xE6,     // range 0-20, unit 40 ms
     CMD_EXTREME_VALUE_STATS = 0xE7, // unit 'times'
     CMD_EXTREME_FILTER_TIMES = 0xE8,// unit 'times'
     CMD_NUMBER_OF_SWIPES = 0xE9,    // unit 'times'
@@ -55,7 +55,7 @@ public:
     size_t build_command(uint8_t *buf, uint8_t cmd, uint16_t data);
 
     // queries the module for measurement data (param usually 0xD3)
-    size_t build_query(uint8_t *buf, uint8_t param);
+    size_t build_query(uint8_t *buf, uint8_t *data, size_t len);
 
     // processes received data, returns true if measurement data was found
     bool process_rx(uint8_t c);

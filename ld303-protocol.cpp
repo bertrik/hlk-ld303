@@ -16,14 +16,15 @@ LD303Protocol::LD303Protocol(void)
 // change query mode: BAAB 00 F6 0007 00 55BB = send cmd F6 with parameter 0007
 // -> reports data continuously?
 
-size_t LD303Protocol::build_query(uint8_t *buf, uint8_t param)
+size_t LD303Protocol::build_query(uint8_t *buf, uint8_t *data, size_t len)
 {
     int idx = 0;
     buf[idx++] = 0x55;  // header
     buf[idx++] = 0x5A;
-    buf[idx++] = 0x02;  // length
-    buf[idx++] = param; // query parameter
-
+    buf[idx++] = len + 1;
+    for (size_t i = 0; i < len; i++) {
+        buf[idx++] = data[i];
+    }
     uint8_t sum = 0;
     for (int i = 0; i < idx; i++) {
         sum += buf[i];

@@ -25,6 +25,12 @@ static void printhex(const char *prefix, const uint8_t * buf, size_t len)
     printf("\n");
 }
 
+static void radar_write(const uint8_t *data, size_t len)
+{
+    printhex(">", data, len);
+    radar.write(data, len);
+}
+
 static int show_help(const cmd_t * cmds)
 {
     for (const cmd_t * cmd = cmds; cmd->cmd != NULL; cmd++) {
@@ -47,8 +53,7 @@ static int do_cmd(int argc, char *argv[])
 
     size_t len = protocol.build_command(buf, cmd, param);
     printf("Sending cmd 0x%02X with param 0x%04X, len %d\n", cmd, param, len);
-    printhex("- data: ", buf, len);
-    radar.write(buf, len);
+    radar_write(buf, len);
 
     return CMD_OK;
 }
@@ -56,12 +61,19 @@ static int do_cmd(int argc, char *argv[])
 static int do_query(int argc, char *argv[])
 {
     uint8_t buf[32];
+    uint8_t data[16];
 
-    uint8_t param = argc < 2 ? 0xD3 : strtoul(argv[1], NULL, 0);
-    printf("Querying with parameter 0x%02X\n", param);
-    size_t len = protocol.build_query(buf, param);
-    printhex("- data: ", buf, len);
-    radar.write(buf, len);
+    size_t idx = 0;
+    if (argc < 2) {
+        data[idx++] = 0xD3;
+    } else {
+        for (int i = 1; i < argc; i++) {
+            data[idx++] = strtoul(argv[i], NULL, 0);
+        }
+    }
+    printf("Querying with parameter 0x%02X\n", data[0]);
+    size_t len = protocol.build_query(buf, data, idx);
+    radar_write(buf, len);
 
     return CMD_OK;
 }
@@ -76,8 +88,7 @@ static int do_mode(int argc, char *argv[])
     uint16_t mode = atoi(argv[1]);
     printf("Setting mode %d\n", mode);
     size_t len = protocol.build_command(buf, CMD_PROTOCOL_TYPE, mode);
-    printhex("- data: ", buf, len);
-    radar.write(buf, len);
+    radar_write(buf, len);
 
     return CMD_OK;
 }
@@ -92,8 +103,7 @@ static int do_baud(int argc, char *argv[])
     int baud = atoi(argv[1]);
     printf("Setting baud %d\n", baud);
     size_t len = protocol.build_command(buf, CMD_BAUD_RATE, baud / 100);
-    printhex("- data: ", buf, len);
-    radar.write(buf, len);
+    radar_write(buf, len);
 
     delay(100);
     radar.begin(baud);
@@ -111,7 +121,7 @@ static int do_debug(int argc, char *argv[])
 const cmd_t commands[] = {
     { "help", do_help, "Show help" },
     { "cmd", do_cmd, "<cmd> <param> Set a parameter" },
-    { "q", do_query, "[param] Query the radar" },
+    { "q", do_query, "[param1] [param2] Query the radar" },
     { "mode", do_mode, "<0|1|6|7> Set protocol mode" },
     { "baud", do_baud, "<baudrate> Set baud rate" },
     { "debug", do_debug, "Toggle serial debug data" },
