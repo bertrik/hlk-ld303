@@ -6,8 +6,8 @@
 #include "editline.h"
 #include "cmdproc.h"
 
-#define PIN_RX  D1
 #define PIN_TX  D2
+#define PIN_RX  D3
 
 #define printf Serial.printf
 
@@ -163,7 +163,7 @@ void loop(void)
         bool done = protocol.process_rx(c);
         if (done) {
             int len = protocol.get_data(buf);
-            printhex("Got data:", buf, len);
+            printhex("<", buf, len);
         }
     }
 }
