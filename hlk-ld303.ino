@@ -118,6 +118,14 @@ static int do_debug(int argc, char *argv[])
     return CMD_OK;
 }
 
+static int do_dump(int argc, char *argv[])
+{
+    uint8_t buf[32];
+    size_t len = protocol.build_command(buf, CMD_QUERY_PARAMETERS, 0);
+    radar_write(buf, len);
+    return CMD_OK;
+}
+
 const cmd_t commands[] = {
     { "help", do_help, "Show help" },
     { "cmd", do_cmd, "<cmd> <param> Set a parameter" },
@@ -125,6 +133,7 @@ const cmd_t commands[] = {
     { "mode", do_mode, "<0|1|6|7> Set protocol mode" },
     { "baud", do_baud, "<baudrate> Set baud rate" },
     { "debug", do_debug, "Toggle serial debug data" },
+    { "dump", do_dump, "Register dump" },
     { NULL, NULL, NULL }
 };
 
