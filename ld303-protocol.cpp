@@ -2,7 +2,6 @@
 
 #include "ld303-protocol.h"
 
-
 LD303Protocol::LD303Protocol(void)
 {
     _state = STATE_HEADER_55;
@@ -58,9 +57,9 @@ bool LD303Protocol::process_rx(uint8_t c)
 {
     switch (_state) {
     case STATE_HEADER_55:
+        _sum = c;
         if (c == 0x55) {
             _state = STATE_HEADER_A5;
-            _sum = c;
         }
         break;
     case STATE_HEADER_A5:
@@ -73,19 +72,18 @@ bool LD303Protocol::process_rx(uint8_t c)
         break;
     case STATE_LEN:
         _sum += c;
-        if (c < sizeof(_buf)) {
-            _len = c;
+        if ((c > 0) && (c < sizeof(_buf))) {
+            _len = c - 1;
             _idx = 0;
-            _state = STATE_DATA;
+            _state = _len > 0 ? STATE_DATA : STATE_CHECK;
         } else {
             _state = STATE_HEADER_55;
         }
         break;
     case STATE_DATA:
         _sum += c;
-        if (_idx < _len) {
-            _buf[_idx++] = c;
-        } else {
+        _buf[_idx++] = c;
+        if (_idx == _len) {
             _state = STATE_CHECK;
         }
         break;
