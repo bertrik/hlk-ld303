@@ -14,6 +14,7 @@
 static LD303Protocol protocol;
 static SoftwareSerial radar(PIN_RX, PIN_TX);
 static char cmdline[128];
+static bool debug = false;
 
 static void printhex(const char *prefix, const uint8_t * buf, size_t len)
 {
@@ -100,12 +101,20 @@ static int do_baud(int argc, char *argv[])
     return CMD_OK;
 }
 
+static int do_debug(int argc, char *argv[])
+{
+    debug = !debug;
+    printf("DEBUG %s\n", debug ? "ON" : "OFF");
+    return CMD_OK;
+}
+
 const cmd_t commands[] = {
     { "help", do_help, "Show help" },
     { "cmd", do_cmd, "<cmd> <param> Set a parameter" },
     { "q", do_query, "[param] Query the radar" },
     { "mode", do_mode, "<0|1|6|7> Set protocol mode" },
     { "baud", do_baud, "<baudrate> Set baud rate" },
+    { "debug", do_debug, "Toggle serial debug data" },
     { NULL, NULL, NULL }
 };
 
@@ -154,10 +163,12 @@ void loop(void)
         }
     }
 
-    // print incoming serial bytes as HEX
+    // process incoming data from radar
     while (radar.available()) {
         uint8_t c = radar.read();
-        printf(" %02X", c);
+        if (debug) {
+            printf(" %02X", c);
+        }
 
         // run receive state machine
         bool done = protocol.process_rx(c);
