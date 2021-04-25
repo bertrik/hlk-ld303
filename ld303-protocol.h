@@ -2,6 +2,60 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+// register dump @ 9600 bps: 108 bytes
+// 0    FA FB 00 64 FA FB header
+// 6    00 01 (0xB1) working mode
+// 8    00 60 (0xD4) baud rate
+// 10   00 01 () XXXX
+//      0B B8 fitting coefficient
+//      07 A5 (0xB3) offset correction
+// 16   00 70 firmware version nr
+//      00 06 XXX
+// 20   00 0A 
+//      00 01
+//      00 0C
+//      00 00
+//      2E E0 = 12000
+// 30   00 00
+//      00 50
+//      00 00
+//      00 0A
+//      00 00
+// 40   00 05
+//      13 88 = 5000
+//      00 08
+//      00 B9
+//      00 00
+// 50   00 00
+//      00 00
+//      00 00
+// 56   00 0B signal interval
+//      00 01 XX
+//      00 00 XX
+// 62   01 11 fretting threshold
+//      00 00 XXXX
+// 66   00 0A proportion statistics
+// 68   01 23 percentage of invalid distance
+// 70   00 22 percentage
+// 72   00 0A extreme value statistics
+// 74   00 02 extremum filtering time
+// 76   00 09 number of swipes
+// 78   00 06 agreement type
+//      00 00 XXXX
+// 82   00 00 output target
+// 84   03 E8 = 1000
+// 86   01 90 sensitivity
+//      00 01 
+//      00 64 
+//      01 2C 
+// 94   00 02 data response time
+//      00 FA = 250 maximum detection distance
+//      00 0A = 10 minimum detection distance 
+// 100  00 00 close treatment
+// 102  00 EF marker
+// 104  0E 01 check
+// 106  AA 55 footer
+
 // command definitions
 typedef enum {
     CMD_OPERATING_MODE = 0xB1,      // 0 = sensitive, 1 = stable
