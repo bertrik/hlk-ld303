@@ -126,6 +126,36 @@ static int do_dump(int argc, char *argv[])
     return CMD_OK;
 }
 
+// tries to detect the baud rate by sending query at different baudrates until we get a reply
+static int do_autobaud(int argc, char *argv[])
+{
+    static const int baudrates[] = {115200, 57600, 38400, 19200, 9600, 4800};
+    uint8_t buf[16];
+    int baudrate;
+    bool found = false;
+
+    for (size_t i = 0; i < sizeof(baudrates) / sizeof(*baudrates); i++) {
+        baudrate = baudrates[i];
+        printf("Attempting baud rate %d ...\n", baudrate);
+        radar.begin(baudrate);
+        uint8_t q = 0xD3;
+        size_t len = protocol.build_query(buf, &q, 1);
+        radar_write(buf, len);
+        unsigned int start = millis();
+        while (!found && ((millis() - start) < 100)) {
+            if (radar.available()) {
+                uint8_t c = radar.read();
+                found = protocol.process_rx(c);
+            }
+        }
+        if (found) {
+            printf("Succeeded at baud rate %d!\n", baudrate);
+            return CMD_OK;
+        }
+    }
+    return CMD_OK;
+}
+
 const cmd_t commands[] = {
     { "help", do_help, "Show help" },
     { "cmd", do_cmd, "<cmd> <param> Set a parameter" },
@@ -134,6 +164,7 @@ const cmd_t commands[] = {
     { "baud", do_baud, "<baudrate> Set baud rate" },
     { "debug", do_debug, "Toggle serial debug data" },
     { "dump", do_dump, "Register dump" },
+    { "autobaud", do_autobaud, "Determine baudrate automatically" },
     { NULL, NULL, NULL }
 };
 
