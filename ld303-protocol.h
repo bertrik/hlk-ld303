@@ -49,8 +49,8 @@
 //      00 64 
 //      01 2C 
 // 94   00 02 data response time
-//      00 FA = 250 maximum detection distance
-//      00 0A = 10 minimum detection distance 
+//      00 FA (0xe5) = 250 maximum detection distance
+//      00 0A (0xe0) = 10 minimum detection distance 
 // 100  00 00 (0xd2) close treatment
 // 102  00 EF marker
 // 104  0E 01 check
