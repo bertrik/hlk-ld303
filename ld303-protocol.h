@@ -7,8 +7,8 @@
 // 6    00 01 (0xB1) working mode
 // 8    00 60 (0xD4) baud rate
 // 10   00 01 () XXXX
-//      0B B8 fitting coefficient
-//      07 A5 (0xB3) offset correction
+//      0B B8 (0xB3)= 3000, fitting coefficient
+//      07 A5 (0xB4)= 1957, offset correction
 // 16   00 70 firmware version nr
 //      00 06 XXX
 // 20   00 0A 
@@ -39,8 +39,8 @@
 // 70   00 22 percentage
 // 72   00 0A extreme value statistics
 // 74   00 02 extremum filtering time
-// 76   00 09 number of swipes
-// 78   00 06 agreement type
+// 76   00 09 (0xE9) number of swipes
+// 78   00 06 (0xF6?) agreement type
 //      00 00 XXXX
 // 82   00 00 output target
 // 84   03 E8 = 1000
@@ -51,7 +51,7 @@
 // 94   00 02 data response time
 //      00 FA = 250 maximum detection distance
 //      00 0A = 10 minimum detection distance 
-// 100  00 00 close treatment
+// 100  00 00 (0xd2) close treatment
 // 102  00 EF marker
 // 104  0E 01 check
 // 106  AA 55 footer
@@ -59,8 +59,8 @@
 // command definitions
 typedef enum {
     CMD_OPERATING_MODE = 0xB1,      // 0 = sensitive, 1 = stable
-    CMD_FITTING_COEFFICIENT = 0xB2, // unit 0.001
-    CMD_OFFSET_CORRECTION = 0xB3,   // unit 0.01 cm
+    CMD_FITTING_COEFFICIENT = 0xB3, // unit 0.001
+    CMD_OFFSET_CORRECTION = 0xB4,   // unit 0.01 cm
     CMD_DELAY_TIME = 0xD1,          // how long the 'presence' bit remain high after detection (ms)
     CMD_CLOSE_TREATMENT = 0xD2,     // 0 = keep last measured distance, 1 = clear distance result
     CMD_MEASUREMENT = 0xD3,         // read measurement?
@@ -68,7 +68,7 @@ typedef enum {
     CMD_TRIGGER_THRESHOLD = 0xD5,   // unit 'k'
     CMD_OUTPUT_TARGET = 0xD9,       // 0 = nearest, 1 = maximum goal
     CMD_SIGNAL_INTERVAL = 0xDA,     // range 5-20, unit 40 ms
-    CMD_RESET = 0xDE,               // reset, 0
+    CMD_RESET = 0xDE,               // reset, 0, immediate
     CMD_MIN_DETECTION_DIST = 0xE0,  // unit 'cm'
     CMD_SENSITIVITY = 0xE1,         // unit 'k', 60-2000 (default 300)
     CMD_MAX_DETECTION_DIST = 0xE5,  // unit 'cm'
