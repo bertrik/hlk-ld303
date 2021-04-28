@@ -1,0 +1,11 @@
+Firmware dump:
+
+*   install openocd
+    sudo apt install openocd
+*   make a local copy of the stm32f1.cfg file
+    cp /usr/share/openocd/scripts/target/stm32f1x.cfg .
+*   search for 0x1ba01477 and replace it with 0x2ba01477
+*   get an STLINKv2 and wire it up (don't connect anything else)
+*   dump the firmware:
+    openocd -f interface/stlink.cfg -f ./stm32f1x.cfg -c "init" -c "reset init" -c "flash read_bank 0 firmware.bin 0 0x20000" -c "exit"
+
