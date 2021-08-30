@@ -5,7 +5,10 @@
 LD303Protocol::LD303Protocol(void)
 {
     _state = STATE_HEADER_55;
+    _sum = 0;
+    memset(_buf, 0, sizeof(_buf));
     _len = 0;
+    _idx = 0;
 }
 
 // protocol 6
